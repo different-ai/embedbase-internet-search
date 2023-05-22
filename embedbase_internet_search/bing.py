@@ -24,7 +24,7 @@ def filter_special_chars(title):
 class BingSearchRequestHandler:
     bing_search_url = "https://api.bing.microsoft.com/v7.0/search"
 
-    def __init__(self, bing_subscription_key, use_description_only=True):
+    def __init__(self, bing_subscription_key, use_description_only=False):
         self.subscription_key = bing_subscription_key
         self.use_description_only = use_description_only
 

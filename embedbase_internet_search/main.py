@@ -5,12 +5,12 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from embedbase.database.memory_db import MemoryDatabase
 import logging
-from sentence_embedder import LocalEmbedder
-from bing import BingSearchRequestHandler
-from starlette.middleware.base import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-s = BingSearchRequestHandler(os.environ["BING_SUBSCRIPTION_KEY"])
+from embedbase_internet_search.sentence_embedder import LocalEmbedder
+from embedbase_internet_search.bing import BingSearchRequestHandler
+from starlette.concurrency import iterate_in_threadpool
+import json
 
+s = BingSearchRequestHandler(os.environ["BING_SUBSCRIPTION_KEY"])
 
 logger = logging.getLogger(__name__)
 
@@ -33,22 +33,27 @@ async def search(request: Request, call_next, _, __):
 
     body = await get_body(request)
 
-    # search the query
-    results = list(s.search(body["query"], 5))
+    query = body.get("query")
 
-    print(f"Got {len(results)} results from bing")
+    if not query:
+        await set_body(request, await request.body())
+        return await call_next(request)
+
+    results = list(s.search(query, 5))
+    await set_body(request, await request.body())
+
+    # todo ask llm to extract context from these results
+    logger.debug("Got results from bing: %s", results)
 
     response = await call_next(request)
-    # response.headers["X-bing"] = ",".join(results)
-    print("Setting response")
-    # todo
-    # return JSONResponse(
-    #     status_code=200,
-    #     content={
-    #         **response.body
-    #         "results": results},
-    # )
-    return response
+    response_body = [section async for section in response.body_iterator]
+    response.body_iterator = iterate_in_threadpool(iter(response_body))
+    response_body = json.loads(response_body[0].decode())
+    response_body["similarities"] += results
+    return JSONResponse(
+        status_code=200,
+        content={**response_body},
+    )
 
 
 app = (
