@@ -37,7 +37,9 @@ jobs:
         if: ${{ steps.regex-match.outputs.match != '' }}
         run: |
           poetry run pytest --cov-report=html --cov=embedbase_internet_search;poetry run coverage-badge -o assets/images/coverage.svg -f
-
+        env:
+          BING_SUBSCRIPTION_KEY: ${{ secrets.BING_SUBSCRIPTION_KEY }}
+  
       - name: Build package
         run: |
           poetry build
