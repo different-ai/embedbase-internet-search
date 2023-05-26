@@ -109,6 +109,8 @@ if __name__ == "__main__":
     uvicorn.run(app)
 ```
 
+[Check how it is used in Embedbase hosted](https://github.com/different-ai/embedbase/blob/4e1181eb8e162e1a9544bf72461a721d10f458fc/hosted/main.py#L38)
+
 If you have any feedback or issues, please let us know by opening an issue or contacting us on [discord](https://discord.gg/pMNeuGrDky).
 
 Regarding the SDK, please refer to the [documentation](https://docs.embedbase.xyz/sdk).
