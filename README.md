@@ -22,9 +22,27 @@ The point of internet search in embedbase is to combine your private information
 
 Also remember that AIs like ChatGPT have limited knowledge to a certain date, for example try to ask ChatGPT about GPT4 or about Sam Altman talk with the senate (which happened few days ago), it will not know about it.
 
+Please check [examples](./examples/answer-question/README.md) for usage or keep reading.
 
-Please check [examples](./examples/answer-question/README.md) for usage.
+## Usage
 
+Just add two lines to your original embedbase entrypoint:
+
+```py
+import uvicorn
+from embedbase import get_app
+from embedbase.database.memory_db import MemoryDatabase
+from embedbase.embedding.openai import OpenAI
+# import this
+from embedbase_internet_search import internet_search
+
+app = get_app().use_db(MemoryDatabase()).use_embedder(OpenAI()).run()
+# add the new endpoint
+app.add_api_route("/internet-search", internet_search, methods=["POST"])
+
+if __name__ == "__main__":
+    uvicorn.run(app)
+```
 
 If you have any feedback or issues, please let us know by opening an issue or contacting us on [discord](https://discord.gg/pMNeuGrDky).
 
