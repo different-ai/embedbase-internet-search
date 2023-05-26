@@ -39,10 +39,11 @@ The recommended workflow is like this:
 4. use `.generate()` to get your question answered
 
 ```ts
+// npm i embedbase-js
 import { createClient } from 'embedbase-js'
 
 const formatInternetResultsInPrompt = (internetResult: any) =>
-    `Name: ${internetResult.name}
+    `Name: ${internetResult.title}
 Snippet: ${internetResult.snippet}
 Url: ${internetResult.url}`
 
@@ -58,18 +59,13 @@ const fn = async () => {
     // get question from process.argv
     const question = process.argv[2]
 
-    const internetSearchResponse = await fetch('https://api.embedbase.xyz/v1/search/internet', {
-        method: 'POST',
-        body: JSON.stringify({
-            query: question,
-            engine: 'bing'
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    const internetSearchJson = await internetSearchResponse.json()
-    const results = internetSearchJson.webPages.value
+    if (!question) {
+        console.log('Please provide a question as argument, for example "What is GPT4?"')
+        return
+    }
+
+    const results = await embedbase.internetSearch(question)
+
     const answerQuestionPrompt = `Based on the following internet search results:
 ${results.map(formatInternetResultsInPrompt).join('\n')}
 \n

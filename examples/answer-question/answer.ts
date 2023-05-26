@@ -7,7 +7,7 @@ import { createClient } from 'embedbase-js'
 // Snippet: snippet
 // Url: url
 const formatInternetResultsInPrompt = (internetResult: any) =>
-    `Name: ${internetResult.name}
+    `Name: ${internetResult.title}
 Snippet: ${internetResult.snippet}
 Url: ${internetResult.url}`
 
@@ -23,25 +23,18 @@ const fn = async () => {
     // get question from process.argv
     const question = process.argv[2]
 
+    if (!question) {
+        console.log('Please provide a question as argument, for example "What is GPT4?"')
+        return
+    }
+
     console.log(`Answering question: ${question}`)
     console.log('I will search internet first')
 
 
-    const internetSearchResponse = await fetch('http://localhost:8000/internet-search', {
-        method: 'POST',
-        body: JSON.stringify({
-            query: question,
-            engine: 'bing'
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    const internetSearchJson = await internetSearchResponse.json()
+    const results = await embedbase.internetSearch(question)
     console.log('Internet search response:')
-    console.log(internetSearchJson)
-
-    const results = internetSearchJson.webPages.value
+    console.log(results)
 
     const answerQuestionPrompt = `Based on the following internet search results:
 ${results.map(formatInternetResultsInPrompt).join('\n')}
