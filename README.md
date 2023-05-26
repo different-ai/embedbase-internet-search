@@ -22,6 +22,10 @@ The point of internet search in embedbase is to combine your private information
 
 Also remember that AIs like ChatGPT have limited knowledge to a certain date, for example try to ask ChatGPT about GPT4 or about Sam Altman talk with the senate (which happened few days ago), it will not know about it.
 
+
+https://github.com/different-ai/embedbase-internet-search/assets/25003283/3131450f-93e2-46b1-8dcb-30673e5abe70
+
+
 Please check [examples](./examples/answer-question/README.md) for usage or keep reading.
 
 ## Quick tour
