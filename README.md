@@ -30,7 +30,7 @@ Please check [examples](./examples/answer-question/README.md) for usage or keep 
 
 ## Quick tour
 
-Here's an example to answer general purpose questions.
+Here's an example to answer general purpose questions using embedbase hosted:
 
 The recommended workflow is like this:
 1. search your question using internet endpoint
@@ -58,7 +58,7 @@ const fn = async () => {
     // get question from process.argv
     const question = process.argv[2]
 
-    const internetSearchResponse = await fetch('https://api.embedbase.xyz/v1/internet/search', {
+    const internetSearchResponse = await fetch('https://api.embedbase.xyz/v1/search/internet', {
         method: 'POST',
         body: JSON.stringify({
             query: question,
