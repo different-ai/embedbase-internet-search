@@ -20,7 +20,7 @@ async def test_internet_search():
     async with AsyncClient(app=app, base_url="http://localhost:8000") as client:
         response = await client.post(
             "/internet-search",
-            json={"query": "African animals", "engine": "bing"},
+            json={"query": "What is Alpaca LLM?", "engine": "bing"},
         )
         assert response.status_code == 200
         json_response = response.json()

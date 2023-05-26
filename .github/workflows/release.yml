@@ -1,0 +1,68 @@
+name: Embedbase core release
+
+on:
+  push:
+    branches:
+      - main
+      - next
+      - rc
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.event.head_commit.message }}
+          regex: "^Release ([^ ]+)"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.4.2
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run tests
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        run: |
+          poetry run pytest --cov-report=html --cov=embedbase_internet_search;poetry run coverage-badge -o assets/images/coverage.svg -f
+
+      - name: Build package
+        run: |
+          poetry build
+
+      - name: Publish to PyPI
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+          poetry publish
+
+      - uses: rickstaa/action-create-tag@v1
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        id: "tag_create"
+        with:
+          tag: ${{ steps.regex-match.outputs.group1 }}
+          tag_exists_error: true
+          message: ${{ github.event.head_commit.message }}
+
+      - name: Create Release
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.regex-match.outputs.group1 }}
+          name: ${{ steps.regex-match.outputs.group1 }}
+          draft: false
+          prerelease: false
+          # TODO: iterate on this changelog thing later
+          body: ${{ github.event.head_commit.message }}
