@@ -58,7 +58,7 @@ const fn = async () => {
     // get question from process.argv
     const question = process.argv[2]
 
-    const internetSearchResponse = await fetch('https://api.embedbase.xyz/v1/internet-search', {
+    const internetSearchResponse = await fetch('https://api.embedbase.xyz/v1/internet/search', {
         method: 'POST',
         body: JSON.stringify({
             query: question,
