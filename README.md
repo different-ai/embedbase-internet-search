@@ -10,7 +10,7 @@ embedbase-internet-search - internet search extension for [Embedbase](https://gi
 <br>
 <br>
 <a href="https://discord.gg/pMNeuGrDky"><img alt="Discord" src="https://img.shields.io/discord/1066022656845025310?color=black&style=for-the-badge"></a>
-
+<a href="https://badge.fury.io/py/embedbase-internet-search"><img alt="PyPI" src="https://img.shields.io/pypi/v/embedbase-internet-search?color=black&style=for-the-badge"></a>
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License](https://img.shields.io/github/license/different-ai/embedbase)](https://github.com/different-ai/embedbase-internet-search/blob/main/LICENSE)
