@@ -29,6 +29,7 @@ Please check [examples](./examples/answer-question/README.md) for usage or keep 
 Just add two lines to your original embedbase entrypoint:
 
 ```py
+import os
 import uvicorn
 from embedbase import get_app
 from embedbase.database.memory_db import MemoryDatabase
@@ -36,7 +37,7 @@ from embedbase.embedding.openai import OpenAI
 # import this
 from embedbase_internet_search import internet_search
 
-app = get_app().use_db(MemoryDatabase()).use_embedder(OpenAI()).run()
+app = get_app().use_db(MemoryDatabase()).use_embedder(OpenAI(os.environ["OPENAI_API_KEY"])).run()
 # add the new endpoint
 app.add_api_route("/internet-search", internet_search, methods=["POST"])
 
